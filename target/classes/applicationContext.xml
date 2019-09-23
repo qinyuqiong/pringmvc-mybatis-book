@@ -32,33 +32,37 @@
     <!--扫描sql配置文件:mapper需要的xml文件-->
     <property name="mapperLocations" value="classpath:mapper/*.xml"/>
         <!--配置分页插件-->
-        <property name="plugins">
+        <!--<property name="plugins">
             <array>
                 <bean class="com.github.pagehelper.PageInterceptor">
                     <property name="properties">
                         <value>
-                            <!--数据库类型为mysql-->
+                            数据库类型为mysql
                             helperDialect=mysql
-                            <!---->
                             resonable=true
                         </value>
                     </property>
                 </bean>
             </array>
-        </property>
+        </property>-->
     </bean>
 
 
-
+<!--
     <bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
         <constructor-arg index="0" ref="sqlSessionFactory" />
     </bean>
-
+-->
     <!-- 扫描basePackage下所有以@MyBatisDao注解的接口 -->
     <bean id="mapperScannerConfigurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
         <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
         <property name="basePackage" value="com.ay.dao"/>
+    </bean>
 
+    <!--配置一个可以批量执行的sqlSession-->
+    <bean class="org.mybatis.spring.SqlSessionTemplate" id="sqlSession">
+        <constructor-arg name="sqlSessionFactory" ref="sqlSessionFactory"></constructor-arg>
+        <constructor-arg name="executorType" value="BATCH"></constructor-arg>
     </bean>
 
 </beans>
