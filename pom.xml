@@ -244,6 +244,13 @@
       <scope>provided</scope>
     </dependency>
 
+    <!--JSR303数据校验,tomcat7以下的服务器el表达式。要额外给服务器的lib包替换新的标准el-->
+    <dependency>
+      <groupId>org.hibernate.validator</groupId>
+      <artifactId>hibernate-validator</artifactId>
+      <version>6.0.10.Final</version>
+    </dependency>
+
   </dependencies>
 
   <build>

@@ -351,7 +351,6 @@
     $("#emp_save_btn").click(function(){
         //1、模态框中填写的表单数据提交给服务器进行保存
         //1、先对要提交给服务器的数据进行校验
-
         if(!validate_add_form()){
             return false;
         };
@@ -373,7 +372,7 @@
                 //发送ajax请求显示最后一页数据即可
                 //
                 to_page(totalRecord);
-                /**
+
                 if(result.code == 100){
                     //员工保存成功；
                     //1、关闭模态框
@@ -394,7 +393,7 @@
                         //显示员工名字的错误信息
                         show_validate_msg("#empName_add_input", "error", result.extend.errorFields.empName);
                     }
-                }*/
+                }
             }
         });
 
