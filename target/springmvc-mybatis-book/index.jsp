@@ -186,6 +186,7 @@
         $("#page_info_area").append("当前"+result.extend.PageInfo.pageNum+"页,总"+
             result.extend.PageInfo.pages+"页,总"+
             result.extend.PageInfo.total+"条记录");
+        totalRecord = result.extend.PageInfo.total;
     }
     //解析显示分页条
     function build_page_nav(result) {
@@ -244,10 +245,10 @@
     //点击新增按钮弹出模态框。
     $("#emp_add_modal_btn").click(function(){
         //清除表单数据（表单完整重置（表单的数据，表单的样式））
-        reset_form("#empAddModal form");
+        //reset_form("#empAddModal form");
         //s$("")[0].reset();
         //发送ajax请求，查出部门信息，显示在下拉列表中
-        getDepts("#empAddModal select");
+        getDepts();
         //弹出模态框
         $("#empAddModal").modal({
             backdrop:"static"
@@ -255,26 +256,79 @@
     });
 
     //查出所有的部门信息并显示在下拉列表中
-    function getDepts(ele){
+    function getDepts(){
         //清空之前下拉列表的值
-        $(ele).empty();
+        //$(ele).empty();
         $.ajax({
             url:"${APP_PATH}/depts",
             type:"GET",
             success:function(result){
                 //{"code":100,"msg":"处理成功！",
                 //"extend":{"depts":[{"deptId":1,"deptName":"开发部"},{"deptId":2,"deptName":"测试部"}]}}
-                console.log(result);
+                //console.log(result);
                 //显示部门信息在下拉列表中
                 //$("#empAddModal select").append("")
-                //$.each(result.extend.depts,function(){
-                 //   var optionEle = $("<option></option>").append(this.deptName).attr("value",this.deptId);
-                 //   optionEle.appendTo(ele);
-                //});
+                $.each(result.extend.depts,function(){
+                    var optionEle = $("<option></option>").append(this.deptName).attr("value",this.deptId);
+                    optionEle.appendTo("#empAddModal select");
+                });
+            }
+        });
+    }
+
+    //点击保存，保存员工。
+    $("#emp_save_btn").click(function(){
+        //1、模态框中填写的表单数据提交给服务器进行保存
+        //1、先对要提交给服务器的数据进行校验
+        /**
+        if(!validate_add_form()){
+            return false;
+        };
+        //1、判断之前的ajax用户名校验是否成功。如果成功。
+        if($(this).attr("ajax-va")=="error"){
+            return false;
+        }
+         */
+        //2、发送ajax请求保存员工
+        $.ajax({
+            url:"${APP_PATH}/emp",
+            type:"POST",
+            data:$("#empAddModal form").serialize(),
+            success:function(result){
+                //alert(result.msg);
+                //员工保存成功
+                //1.关闭模态框
+                $("#empAddModal").modal('hide');
+                //2.来到最后一页，显示刚才保存的数据
+                //发送ajax请求显示最后一页数据即可
+                //
+                to_page(totalRecord);
+                /**
+                if(result.code == 100){
+                    //员工保存成功；
+                    //1、关闭模态框
+                    $("#empAddModal").modal('hide');
+
+                    //2、来到最后一页，显示刚才保存的数据
+                    //发送ajax请求显示最后一页数据即可
+                    to_page(totalRecord);
+                }else{
+                    //显示失败信息
+                    //console.log(result);
+                    //有哪个字段的错误信息就显示哪个字段的；
+                    if(undefined != result.extend.errorFields.email){
+                        //显示邮箱错误信息
+                        show_validate_msg("#email_add_input", "error", result.extend.errorFields.email);
+                    }
+                    if(undefined != result.extend.errorFields.empName){
+                        //显示员工名字的错误信息
+                        show_validate_msg("#empName_add_input", "error", result.extend.errorFields.empName);
+                    }
+                }*/
             }
         });
 
-    }
+    });
 
 </script>
 
