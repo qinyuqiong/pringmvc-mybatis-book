@@ -12,6 +12,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
@@ -26,12 +27,30 @@ public class EmployeeContrller {
     @Autowired
     EmployeeService employeeService;
 
+    /**
+     * 员工更新
+     * @param employee
+     * @return
+     */
+    @RequestMapping(value = "/emp/{empId}",method = RequestMethod.PUT)
+    @ResponseBody
+    public Msg saveEmp(Employee employee, HttpServletRequest request){
+        System.out.println("------------------------------------");
+        System.out.println("请求体中的值："+request.getParameter("gender"));
+        System.out.println("员工数据"+employee.getEmpId()+"/"+employee.getEmpName()+"/"+employee.getGender()+"/"+employee.getEmail());
+        employeeService.updateEmp(employee);
+        return Msg.success();
+    }
+
+    /**
+     * 根据员工ID查询
+     * @param id
+     * @return
+     */
     @RequestMapping(value = "/emp/{id}",method = RequestMethod.GET)
     @ResponseBody
     public Msg getEmp(@PathVariable("id") Integer id){
-        System.out.println(id);
         Employee employee = employeeService.getEmp(id);
-        System.out.println(employee);
         return Msg.success().add("emp",employee);
     }
 
