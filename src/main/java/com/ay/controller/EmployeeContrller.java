@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,15 +29,39 @@ public class EmployeeContrller {
     EmployeeService employeeService;
 
     /**
+     * 单个或批量删除
+     * @param ids
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/emp/{ids}",method = RequestMethod.DELETE)
+    public Msg deleteEmp(@PathVariable("ids") String ids){
+        if (ids.contains("-")){
+            //批量删除
+            List<Integer> del_ids = new ArrayList<>();
+            String[] str_ids = ids.split("-");
+            for (String string : str_ids){
+                del_ids.add(Integer.parseInt(string));
+            }
+            employeeService.deleteBatch(del_ids);
+        }else {
+            //单个删除
+            Integer id = Integer.parseUnsignedInt(ids);
+            employeeService.deleteEmp(id);
+        }
+
+        return Msg.success();
+    }
+
+    /**
      * 员工更新
      * @param employee
      * @return
      */
     @RequestMapping(value = "/emp/{empId}",method = RequestMethod.PUT)
     @ResponseBody
-    public Msg saveEmp(Employee employee, HttpServletRequest request){
+    public Msg saveEmp(Employee employee){
         System.out.println("------------------------------------");
-        System.out.println("请求体中的值："+request.getParameter("gender"));
         System.out.println("员工数据"+employee.getEmpId()+"/"+employee.getEmpName()+"/"+employee.getGender()+"/"+employee.getEmail());
         employeeService.updateEmp(employee);
         return Msg.success();
